@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -30,6 +33,8 @@ class SecurityConfig {
 	@Bean
 	fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
 		http {
+			csrf { disable() }
+			cors { disable() }
 			authorizeHttpRequests {
 				authorize("/open", permitAll)
 				authorize(anyRequest, authenticated)
@@ -55,9 +60,17 @@ class SecurityConfig {
 
 @RestController
 class DemoController {
+	@GetMapping("/open")
+	fun open() = "Open hello world"
+
 	@GetMapping("/secured")
 	fun secured() = "Secured hello world"
 
-	@GetMapping("/open")
-	fun open() = "Open hello world"
+	@GetMapping("/secured/{pathName}")
+	fun securedPath(@PathVariable pathName: String) = "Secured path hello $pathName"
+
+	@PostMapping("/secured")
+	fun securedPost(@RequestBody user: UserDto) : String = "Secured hello ${user.name}"
 }
+
+data class UserDto(val name: String)
