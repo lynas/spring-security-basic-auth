@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -71,6 +72,9 @@ class DemoController {
 
 	@PostMapping("/secured")
 	fun securedPost(@RequestBody user: UserDto) : String = "Secured hello ${user.name}"
+
+	@GetMapping("/securedQueryParam")
+	fun securedQueryParam(@RequestParam(name = "name") name:String?, @RequestParam(name = "age") age:Int?) = "SecuredQueryParam hello world $name age = $age"
 }
 
 data class UserDto(val name: String)
